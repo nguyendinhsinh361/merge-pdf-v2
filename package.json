@@ -29,6 +29,7 @@
     "@nestjs/swagger": "^6.0.5",
     "@severi/pdf-merger-js": "^3.1.2",
     "@types/multer": "^1.4.7",
+    "aws-sdk": "^2.1202.0",
     "azure-storage": "^2.10.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

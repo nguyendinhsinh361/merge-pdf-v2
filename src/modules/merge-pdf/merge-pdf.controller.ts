@@ -87,9 +87,8 @@ export class MergePdfController {
         });
       }
     });
+    const result = await this.mergePdfService.uploadFile(urlT)
     
-    return new StreamableFile(file);
+    return result;
   }
-
-  
 }

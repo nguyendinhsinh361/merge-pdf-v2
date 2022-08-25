@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import * as fs from 'fs';
 import * as PDFDocument from 'pdfkit';
 import { MergePdfDto } from "./dto/merge-pdf.dto";
+import * as AWS from 'aws-sdk'
 
 @Injectable()
 export class MergePdfService { 
@@ -40,6 +41,31 @@ export class MergePdfService {
         }
         return pdfArr;
     }
+
+    async uploadFile (fileName) {
+        const s3 = new AWS.S3({
+            accessKeyId: process.env.ACCESS_KEY,
+            secretAccessKey: process.env.PRIVATE_KEY,
+        });
+        // Read content from the file
+        const fileContent = fs.readFileSync(fileName);
+    
+        // Setting up S3 upload parameters
+        const params = {
+            Bucket: process.env.BUCKET_NAME,
+            Key: fileName.split('/')[fileName.split('/').length-1], // File name you want to save as in S3
+            Body: fileContent,
+            ACL:'public-read'
+        };
+    
+        // Uploading files to the bucket
+        s3.upload(params, function(err, data) {
+            if (err) {
+                throw err;
+            }
+            console.log(`File uploaded successfully. ${data.Location}`);
+        });
+    };
 
     async mergePdf(files: Array<Express.Multer.File>, mergePdfDto: MergePdfDto) {
         
